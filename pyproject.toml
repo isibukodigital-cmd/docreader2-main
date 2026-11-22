@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "private-doc-qa"
+version = "0.2.0"
+description = "Tenant- and ACL-aware, citation-first Q&A for organizational documents"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy",
+  "pypdf",
+  "python-docx",
+  "rank-bm25",
+  "requests",
+]
+
+[project.optional-dependencies]
+embeddings = ["sentence-transformers"]
+synth = ["reportlab"]
+# Local Hugging Face generation (the `hf` backend). Add `quant` for --four-bit.
+hf = ["torch", "transformers", "accelerate"]
+quant = ["bitsandbytes"]
+dev = ["pytest", "httpx>=0.27", "fastapi>=0.110", "python-multipart>=0.0.9", "python-dotenv>=1.0", "reportlab", "psycopg[binary,pool]>=3.2", "PyJWT[crypto]>=2.9"]
+api = [
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.27",
+  "python-multipart>=0.0.9",
+  "python-dotenv>=1.0",
+  "pydantic>=2.6",
+  "psycopg[binary,pool]>=3.2",
+  "PyJWT[crypto]>=2.9",
+]
+
+
+[project.scripts]
+docqa = "docqa.cli:main"
+docqa-api = "docqa.api:run"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+docqa = ["static/*.html", "static/*.css", "static/*.js"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

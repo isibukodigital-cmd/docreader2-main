@@ -1,0 +1,12 @@
+numpy
+pypdf
+python-docx
+reportlab
+rank-bm25
+requests
+sentence-transformers
+fastapi>=0.110
+uvicorn[standard]>=0.27
+python-multipart>=0.0.9
+python-dotenv>=1.0
+pydantic>=2.6
