@@ -37,6 +37,7 @@ declare
     v_explain_line record;
     v_plan text := '';
     v_seqscan_setting text;
+    v_bitmapscan_setting text;
 begin
     if exists (
         select 1
@@ -416,7 +417,9 @@ begin
     );
 
     v_seqscan_setting := current_setting('enable_seqscan');
+    v_bitmapscan_setting := current_setting('enable_bitmapscan');
     perform set_config('enable_seqscan', 'off', true);
+    perform set_config('enable_bitmapscan', 'off', true);
     for v_explain_line in execute format($explain$
         explain (costs off)
         with eligible as not materialized (
@@ -442,6 +445,7 @@ begin
         v_plan := v_plan || v_explain_line."QUERY PLAN" || E'\n';
     end loop;
     perform set_config('enable_seqscan', v_seqscan_setting, true);
+    perform set_config('enable_bitmapscan', v_bitmapscan_setting, true);
     if position('docqa_chunks_embedding_idx' in v_plan) = 0 then
         raise exception 'semantic candidate plan did not use the HNSW index: %', v_plan;
     end if;
