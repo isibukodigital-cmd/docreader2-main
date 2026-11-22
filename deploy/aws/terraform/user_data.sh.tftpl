@@ -1,0 +1,60 @@
+#!/bin/bash
+set -Eeuo pipefail
+exec > >(tee -a /var/log/docreader-bootstrap.log) 2>&1
+
+dnf install -y docker awscli
+systemctl enable --now docker
+
+aws ecr get-login-password --region "${aws_region}" \
+  | docker login --username AWS --password-stdin "${ecr_repository_url}"
+
+DB_SECRET_JSON="$(aws secretsmanager get-secret-value \
+  --secret-id "${db_secret_arn}" \
+  --query SecretString \
+  --output text)"
+DOCQA_DATABASE_URL="$(DB_SECRET_JSON="$DB_SECRET_JSON" python3 -c '
+import json
+import os
+from urllib.parse import quote
+
+secret = json.loads(os.environ["DB_SECRET_JSON"])
+username = quote(secret["username"], safe="")
+password = quote(secret["password"], safe="")
+print(
+    f"postgresql://{username}:{password}@${db_endpoint}:5432/${db_name}"
+    "?sslmode=require"
+)
+')"
+
+install -d -m 0750 /etc/docreader /var/lib/docreader/model-cache
+chown 10001:10001 /var/lib/docreader/model-cache
+cat > /etc/docreader/app.env <<EOF
+DOCQA_DEPLOYMENT_MODEL=shared-hosted
+DOCQA_AUTH_PROVIDER=cognito
+DOCQA_DOCUMENT_STORE=postgres
+DOCQA_DATABASE_URL=$DOCQA_DATABASE_URL
+DOCQA_COGNITO_REGION=${cognito_region}
+DOCQA_COGNITO_USER_POOL_ID=${cognito_user_pool_id}
+DOCQA_COGNITO_CLIENT_ID=${cognito_client_id}
+DOCQA_COGNITO_DOMAIN=${cognito_domain}
+DOCQA_MICROSOFT_GRAPH_CLIENT_ID=${microsoft_graph_client_id}
+DOCQA_BACKEND=extractive
+DOCQA_AUDIT_QUESTIONS=hash
+DOCQA_BRANDING_DIR=/app/pics
+DOCQA_PROFILES_DIR=/app/profiles
+EOF
+chmod 0600 /etc/docreader/app.env
+
+docker pull "${app_image}"
+docker rm --force docreader-app >/dev/null 2>&1 || true
+docker run --detach \
+  --name docreader-app \
+  --restart unless-stopped \
+  --env-file /etc/docreader/app.env \
+  --publish 8000:8000 \
+  --volume /var/lib/docreader/model-cache:/home/docqa/.cache/huggingface \
+  --health-cmd "curl --fail --silent http://127.0.0.1:8000/health/ready || exit 1" \
+  --health-interval 30s \
+  --health-timeout 10s \
+  --health-retries 3 \
+  "${app_image}"

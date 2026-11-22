@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Privacy notice · Doc Reader</title>
+    <link rel="stylesheet" href="/assets/legal.css">
+  </head>
+  <body>
+    <main class="legal-page">
+      <nav class="legal-nav" aria-label="Legal navigation">
+        <a href="/">Doc Reader</a><a href="/terms">Terms</a><a href="/subprocessors">Subprocessors</a>
+      </nav>
+      <p class="draft-notice"><strong>Draft for legal review.</strong> Retention periods, service-region details and provider terms must be confirmed before production use. This document is not legal advice.</p>
+      <h1>Privacy notice</h1>
+      <p class="updated">Responsible party / service operator: Isibuko Digital Solutions · South Africa</p>
+
+      <h2>Who to contact</h2>
+      <p>For privacy questions or requests, contact <a href="mailto:isibukodigital@gmail.com">isibukodigital@gmail.com</a>. A final publication should identify the correct legal entity, postal address and privacy contact.</p>
+
+      <h2>Information the service processes</h2>
+      <ul>
+        <li><strong>Account and workspace information:</strong> Supabase Auth user identifiers and account email, identity-provider details, workspace name/type, membership, roles and group assignments.</li>
+        <li><strong>Organization setup information:</strong> Microsoft tenant identifiers, organization name and verified domains, selected Entra group identifiers/names, and the requester email submitted during onboarding. Microsoft Graph access tokens are used for the request and are not stored by this application.</li>
+        <li><strong>Documents:</strong> uploaded files are parsed and processed temporarily. The original upload is not retained by the application. Extracted text chunks, document names, access groups and vector embeddings are stored in Supabase.</li>
+        <li><strong>Questions and activity:</strong> by default, query audit records store a SHA-256 hash of the question rather than its text. Hashing is pseudonymization, not anonymization; predictable questions may be guessed. The <code>DOCQA_AUDIT_QUESTIONS</code> setting can explicitly select full text or no question text. Audit records can also contain user ID, document names retrieved/cited, action, outcome and timestamp. Sign-in events are not written to this audit stream.</li>
+      </ul>
+
+      <h2>How information is used and shared</h2>
+      <p>Supabase provides authentication and the persistent Postgres/pgvector data store. If hosted language models are enabled, the question and authorized retrieved document passages may be sent to any configured provider in the chain. The starting provider is chosen at random, and the remaining configured providers are tried if it fails. OpenRouter requests ask providers not to collect prompt data, but this request is not a guarantee of provider retention behavior. See the <a href="/subprocessors">subprocessor list</a>.</p>
+      <p>When a local or extractive model is configured, model prompts are not sent to Groq, OpenRouter, Cerebras or NVIDIA NIM by this application. The workspace administrator should confirm the active deployment configuration before users submit sensitive information.</p>
+
+      <h2>Data location, retention and security</h2>
+      <p>The Supabase project region and any model-provider processing locations depend on deployment and provider configuration and must be confirmed before publication. Retention periods for audit records, offboarding records, provider logs and backups are <strong>not yet set</strong>; these periods must be documented before production onboarding. Supabase backup expiry and provider-side retention are subject to the applicable service settings and agreements.</p>
+      <p>The application uses tenant-scoped access controls and server-side authorization. These controls do not by themselves establish legal compliance or guarantee that every provider or backup has erased data.</p>
+
+      <h2>Export, deletion and offboarding</h2>
+      <p>A workspace administrator can download a JSON export containing workspace metadata, member identities and emails, group/role assignments, organization setup and request history, indexed document text, audit events and offboarding-request history. The export does not contain original uploaded files, which the application does not retain, or vector embeddings, which can be regenerated from the exported text.</p>
+      <p>A workspace administrator can request offboarding. The workspace remains available until a platform administrator reviews the request. If approved, the active workspace, documents and indexed chunks, memberships, groups, query audit events, and linked organization setup records are deleted; associated workspace claims are cleared from Supabase Auth metadata. Supabase Auth accounts are not deleted because an account may be used elsewhere. A minimal offboarding decision record is retained; its retention period is still to be determined. Provider-side copies and backups may persist until their applicable retention periods expire.</p>
+
+      <h2>Data subject requests</h2>
+      <p>Contact <a href="mailto:isibukodigital@gmail.com">isibukodigital@gmail.com</a> to ask about access, correction, deletion or other rights that may apply under South African law, including POPIA. The applicable lawful basis, response periods, complaint contact and any jurisdiction-specific terms must be confirmed by the responsible party and legal counsel before this draft is used as a final notice.</p>
+
+      <h2>Changes and unresolved publication items</h2>
+      <p>Before release, confirm the legal entity and address, lawful processing conditions, actual Supabase region and agreements, provider/model retention terms, backup expiry, audit/offboarding retention, and effective date. Do not treat this draft as a final legal policy.</p>
+    </main>
+  </body>
+</html>

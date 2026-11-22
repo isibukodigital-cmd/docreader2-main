@@ -1,0 +1,47 @@
+groups:
+  - name: docqa
+    rules:
+      - alert: DocQAApplicationNotReady
+        expr: docqa_app_ready == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "DocQA application is not ready"
+          description: "The application has been unavailable or is restarting."
+
+      - alert: DocQADatabaseDegraded
+        expr: docqa_database_ready == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "DocQA database probe is failing"
+          description: "Supabase/Postgres is unavailable or the database health RPC is failing."
+
+      - alert: DocQAProviderDegraded
+        expr: docqa_provider_ready == 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "DocQA hosted provider chain is degraded"
+          description: "One or more hosted-model requests have failed."
+
+      - alert: DocQAHighHTTPErrorRate
+        expr: rate(docqa_http_errors_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "DocQA HTTP 5xx/error rate is high"
+          description: "Unhandled or 5xx responses exceed 0.1 per second over five minutes."
+
+      - alert: DocQAHighLatency
+        expr: docqa_http_latency_mean_ms > 2000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "DocQA HTTP mean latency is high"
+          description: "Mean request latency has exceeded 2 seconds."

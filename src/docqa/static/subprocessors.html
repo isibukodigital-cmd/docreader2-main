@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Subprocessors · Doc Reader</title>
+    <link rel="stylesheet" href="/assets/legal.css">
+  </head>
+  <body>
+    <main class="legal-page">
+      <nav class="legal-nav" aria-label="Legal navigation">
+        <a href="/">Doc Reader</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>
+      </nav>
+      <p class="draft-notice"><strong>Draft for legal review.</strong> Verify each provider's current legal entity, data-processing terms, region, retention and onward subprocessors before production use.</p>
+      <h1>Subprocessor list</h1>
+      <p class="updated">Operator: Isibuko Digital Solutions · Contact: <a href="mailto:isibukodigital@gmail.com">isibukodigital@gmail.com</a></p>
+
+      <h2>Providers used by the current application</h2>
+      <ul>
+        <li><strong>Supabase</strong> — authentication and persistent Postgres/pgvector storage for workspace metadata, extracted document chunks, embeddings and audit events. The selected data region depends on the deployed Supabase project.</li>
+        <li><strong>Groq</strong> — hosted language-model provider when configured. The question and authorized retrieved passages are sent for response generation if selected or reached as a fallback.</li>
+        <li><strong>OpenRouter</strong> — hosted language-model provider when configured. The application asks OpenRouter to route to providers that do not store/train on prompts and sends <code>data_collection=deny</code>; this does not independently verify downstream behavior.</li>
+        <li><strong>Cerebras</strong> — hosted language-model provider when configured. The question and authorized retrieved passages are sent for response generation if selected or reached as a fallback.</li>
+        <li><strong>NVIDIA NIM</strong> — hosted language-model provider when configured. The question and authorized retrieved passages are sent for response generation if selected or reached as a fallback.</li>
+      </ul>
+
+      <h2>Configuration and data handling</h2>
+      <p>Supabase is used for authentication and storage in the supported deployment. When the hosted LLM backend is enabled, one configured provider is selected at random as the starting provider for each request; if it fails, the remaining configured providers are tried in their configured order. Any provider reached in that chain receives the question and authorized retrieved passages. Local/extractive deployments do not send prompts to these hosted model providers through this application.</p>
+      <p>Provider locations, current downstream model providers, applicable data-processing agreements, retention/deletion windows, and onward subprocessors have not been independently confirmed here. Review current vendor terms and configure customer disclosures before enabling hosted-model processing for sensitive content.</p>
+
+      <h2>Changes</h2>
+      <p>Update this list when providers or model-routing configuration change. The final publication should include an effective date and any customer notice or objection process required by the applicable agreement.</p>
+      <p><a href="/privacy">Read the privacy notice</a>.</p>
+    </main>
+  </body>
+</html>

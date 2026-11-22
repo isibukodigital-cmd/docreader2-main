@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f6f2">
+    <meta name="description" content="Ask questions across documents you are authorized to access.">
+    <title>Document assistant</title>
+    <link rel="stylesheet" href="/assets/chat.css">
+    <script src="/assets/chat.js" defer></script>
+  </head>
+  <body>
+      <a class="skip-link" href="#chat-form">Skip to question</a>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Document assistant home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg id="brand-default-mark" viewBox="0 0 32 32" fill="none">
+              <path d="M8 4.75h10l6 6V27.25H8V4.75Z" />
+              <path d="M18 4.75v6h6M12 16h8M12 20h8" />
+            </svg>
+            <img id="brand-logo" class="brand-logo" alt="" hidden>
+          </span>
+          <span class="brand-copy">
+            <strong id="brand-name">Doc Reader</strong>
+            <span id="brand-tagline">Document assistant</span>
+          </span>
+        </a>
+        <div class="topbar-right">
+          <span id="session-label" class="session-label" hidden></span>
+          <button id="sign-out" class="button button-quiet button-small" type="button" hidden>Sign out</button>
+          <span class="secure-label"><span class="secure-dot"></span>Access protected</span>
+        </div>
+      </header>
+
+      <section id="login-view" class="login-layout" aria-labelledby="login-title">
+        <div class="intro-panel">
+          <div class="eyebrow"><span class="eyebrow-line"></span> YOUR KNOWLEDGE, IN CONTEXT</div>
+          <h1 id="login-heading">Find the answer in your documents.</h1>
+          <p id="login-subtitle">Ask a question in plain language. Get a clear answer with sources you can open and verify.</p>
+          <div class="trust-points">
+            <div class="trust-point">
+              <span class="trust-icon" aria-hidden="true">01</span>
+              <span><strong>Grounded answers</strong><small>Responses are tied to the documents they cite.</small></span>
+            </div>
+            <div class="trust-point">
+              <span class="trust-icon" aria-hidden="true">02</span>
+              <span><strong>Your access applies</strong><small>Only documents you are allowed to read are searched.</small></span>
+            </div>
+            <div class="trust-point">
+              <span class="trust-icon" aria-hidden="true">03</span>
+              <span><strong>Built for your workspace</strong><small>Policies, guides, manuals, and more.</small></span>
+            </div>
+          </div>
+          <div class="decorative-stamp" aria-hidden="true">
+            <span>KNOWLEDGE<br>WITH CONTEXT</span>
+            <svg viewBox="0 0 72 72" fill="none">
+              <path d="M15 20h24l17 17v24H15V20Z" />
+              <path d="M39 20v17h17M23 45h24M23 51h17" />
+              <circle cx="53" cy="17" r="9" />
+              <path d="m49 17 3 3 5-6" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="login-card">
+          <div class="card-kicker"><span class="tiny-lock" aria-hidden="true">⌑</span> SECURE SIGN IN</div>
+          <h2 id="login-title">Choose your account</h2>
+          <p class="card-subtitle">Choose Google for a private personal workspace, or Microsoft for a personal account or organization access.</p>
+          <div class="provider-buttons" aria-label="Sign in with a provider">
+            <button class="provider-button" type="button" data-provider="google">
+              <svg class="provider-icon google-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="#4285F4" d="M21.35 12.23c0-.72-.06-1.42-.18-2.09H12v3.96h5.24a4.49 4.49 0 0 1-1.94 2.95v2.46h3.14c1.84-1.69 2.91-4.18 2.91-7.28Z"/>
+                <path fill="#34A853" d="M12 21.75c2.63 0 4.84-.87 6.45-2.36l-3.14-2.46c-.87.58-1.98.93-3.31.93-2.54 0-4.69-1.71-5.46-4.01H3.29v2.54A9.75 9.75 0 0 0 12 21.75Z"/>
+                <path fill="#FBBC05" d="M6.54 13.85a5.86 5.86 0 0 1 0-3.7V7.61H3.29a9.75 9.75 0 0 0 0 8.78l3.25-2.54Z"/>
+                <path fill="#EA4335" d="M12 6.14c1.43 0 2.71.49 3.72 1.46l2.79-2.79C16.84 3.2 14.63 2.25 12 2.25a9.75 9.75 0 0 0-8.71 5.36l3.25 2.54c.77-2.3 2.92-4.01 5.46-4.01Z"/>
+              </svg>
+              <span class="provider-copy"><strong>Continue with Google</strong><small>Personal preview</small></span>
+              <span class="provider-arrow" aria-hidden="true">→</span>
+            </button>
+            <button class="provider-button" type="button" data-provider="azure">
+              <svg class="provider-icon microsoft-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="#F25022" d="M2 2h9.5v9.5H2z"/><path fill="#7FBA00" d="M12.5 2H22v9.5h-9.5z"/>
+                <path fill="#00A4EF" d="M2 12.5h9.5V22H2z"/><path fill="#FFB900" d="M12.5 12.5H22V22h-9.5z"/>
+              </svg>
+              <span class="provider-copy"><strong>Continue with Microsoft</strong><small>Work, school, or personal account</small></span>
+              <span class="provider-arrow" aria-hidden="true">→</span>
+            </button>
+          </div>
+          <button id="cognito-login" class="button button-primary login-button" type="button" hidden>
+            <span>Continue with email or password</span><span class="button-arrow" aria-hidden="true">→</span>
+          </button>
+          <div class="login-divider"><span>or use email</span></div>
+          <details class="password-option">
+            <summary>Sign in with email and password</summary>
+          <form id="login-form">
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" autocomplete="username" placeholder="you@example.com" required>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+            <button id="login-submit" class="button button-primary login-button" type="submit">
+              <span>Continue securely</span><span class="button-arrow" aria-hidden="true">→</span>
+            </button>
+          </form>
+          </details>
+          <p id="login-error" class="message message-error" role="alert" hidden></p>
+          <div class="login-footnote"><span class="footnote-lock" aria-hidden="true">◆</span> Your identity and document access are protected.</div>
+        </div>
+      </section>
+
+      <section id="onboarding-view" class="onboarding-layout" aria-labelledby="onboarding-title" hidden>
+        <div class="onboarding-card">
+          <div class="card-kicker"><span class="tiny-lock" aria-hidden="true">⌑</span> FREE PREVIEW SETUP</div>
+          <h2 id="onboarding-title">Set up your workspace</h2>
+          <ol class="onboarding-progress" aria-label="Workspace setup progress">
+            <li class="is-active" aria-current="step"><span>1</span><strong>Workspace</strong></li>
+            <li><span>2</span><strong>Microsoft Graph</strong></li>
+            <li><span>3</span><strong>Review</strong></li>
+          </ol>
+          <p id="onboarding-description" class="card-subtitle"></p>
+          <form id="workspace-form">
+            <label id="workspace-name-label" for="workspace-name">Workspace name</label>
+            <input id="workspace-name" name="workspace_name" type="text" maxlength="80">
+            <button id="workspace-submit" class="button button-primary login-button" type="submit">
+              <span>Create preview workspace</span><span class="button-arrow" aria-hidden="true">→</span>
+            </button>
+          </form>
+          <section id="organization-setup" class="organization-setup" hidden>
+            <div class="platform-admin-divider"></div>
+            <h3>Set up organization access</h3>
+            <p class="platform-admin-note">A Microsoft 365 tenant administrator connects Microsoft Graph, selects the security groups that should have workspace access, and submits the request for platform review.</p>
+            <button id="graph-connect" class="button button-quiet login-button" type="button">
+              <span>Connect Microsoft Graph</span><span class="button-arrow" aria-hidden="true">→</span>
+            </button>
+            <p id="organization-request-status" class="message" role="status" aria-live="polite" hidden></p>
+            <form id="organization-request-form" hidden>
+              <p id="organization-graph-summary" class="platform-admin-note"></p>
+              <fieldset id="organization-group-mappings" class="organization-group-mappings">
+                <legend>Choose groups and workspace group names</legend>
+              </fieldset>
+              <button id="organization-request-submit" class="button button-primary login-button" type="submit">
+                <span>Submit organization request</span><span class="button-arrow" aria-hidden="true">→</span>
+              </button>
+            </form>
+          </section>
+          <section id="organization-group-connect" class="organization-setup" hidden>
+            <div class="platform-admin-divider"></div>
+            <h3>Verify organization group membership</h3>
+            <p class="platform-admin-note">This organization uses approved Entra groups for workspace access. Connect Microsoft Graph to verify your membership before joining or syncing access.</p>
+            <button id="graph-join-connect" class="button button-quiet login-button" type="button">
+              <span>Connect Microsoft Graph</span><span class="button-arrow" aria-hidden="true">→</span>
+            </button>
+            <p id="organization-group-connect-status" class="message" role="status" aria-live="polite" hidden></p>
+          </section>
+          <p id="onboarding-error" class="message message-error" role="alert" hidden></p>
+          <div class="trial-limits">
+            <div><strong id="onboarding-member-limit">Up to 10 users</strong><span>Personal preview</span></div>
+            <div><strong>5 documents</strong><span>Per workspace</span></div>
+          </div>
+          <p class="onboarding-note">No payment details required for the preview. Contact the product administrator when you need more usage.</p>
+        </div>
+      </section>
+
+      <section id="platform-admin-view" class="onboarding-layout" aria-labelledby="platform-admin-title" hidden>
+        <div class="onboarding-card platform-admin-card">
+          <div class="card-kicker"><span class="tiny-lock" aria-hidden="true">⌑</span> PLATFORM ADMINISTRATION</div>
+          <h2 id="platform-admin-title">Organization access</h2>
+          <p class="card-subtitle">Review Graph-verified organization requests and manage approved Microsoft tenants.</p>
+          <button id="platform-admin-back" class="button button-quiet button-small" type="button" hidden>Back to workspace</button>
+          <h3>Organization requests awaiting review</h3>
+          <div id="platform-organization-requests" class="library-list"></div>
+          <h3>Workspace offboarding requests awaiting review</h3>
+          <p class="platform-admin-note">Approving permanently deletes workspace documents, indexed content, membership and query audit events. Supabase Auth accounts remain intact.</p>
+          <div id="platform-offboarding-requests" class="library-list"></div>
+          <h3>Registered organizations</h3>
+          <p id="platform-org-message" class="message" role="status" aria-live="polite" hidden></p>
+          <div id="platform-org-list" class="library-list"></div>
+          <div class="platform-admin-divider"></div>
+          <h3>Platform administrators</h3>
+          <p class="platform-admin-note">Grant access to a confirmed Supabase user email. Grants and removals are recorded below.</p>
+          <form id="platform-admin-form">
+            <label for="platform-admin-email">Administrator email</label>
+            <input id="platform-admin-email" name="email" type="email" maxlength="320" placeholder="operator@example.com" required>
+            <button id="platform-admin-submit" class="button button-primary login-button" type="submit">
+              <span>Grant platform access</span><span class="button-arrow" aria-hidden="true">→</span>
+            </button>
+          </form>
+          <p id="platform-admin-message" class="message" role="status" aria-live="polite" hidden></p>
+          <div id="platform-admin-list" class="library-list"></div>
+          <h3>Recent access changes</h3>
+          <div id="platform-admin-audit" class="library-list"></div>
+        </div>
+      </section>
+
+      <section id="chat-view" class="chat-layout" aria-label="Document chat" hidden>
+        <div class="chat-heading">
+          <div>
+            <div class="eyebrow"><span class="eyebrow-line"></span> YOUR DOCUMENTS</div>
+            <h1>What would you like<br>to <em>understand?</em></h1>
+            <p>Ask a question. Your answer will include sources to help you verify it.</p>
+          </div>
+          <div class="chat-badge" aria-hidden="true">
+            <svg viewBox="0 0 96 96" fill="none">
+              <rect x="17" y="13" width="50" height="66" rx="4" />
+              <path d="M29 30h25M29 39h25M29 48h16" />
+              <circle cx="67" cy="65" r="16" />
+              <path d="m78 77 9 9" />
+            </svg>
+          </div>
+        </div>
+
+        <nav class="workspace-toolbar" aria-label="Workspace navigation">
+          <button id="dashboard-toggle" class="toolbar-button" type="button" hidden><span aria-hidden="true">▦</span> Administration</button>
+          <button id="graph-sync" class="toolbar-button" type="button" hidden><span aria-hidden="true">↻</span> Sync groups</button>
+          <button id="platform-admin-toggle" class="toolbar-button" type="button" hidden><span aria-hidden="true">◆</span> Platform</button>
+          <button id="upload-toggle" class="toolbar-button" type="button" hidden><span aria-hidden="true">＋</span> Upload</button>
+          <button id="library-toggle" class="toolbar-button" type="button" hidden><span aria-hidden="true">▤</span> Documents</button>
+          <button id="export-conversation" class="toolbar-button" type="button" hidden><span aria-hidden="true">↓</span> Export</button>
+          <button id="clear-conversation" class="toolbar-button" type="button"><span aria-hidden="true">×</span> Clear conversation</button>
+        </nav>
+        <p id="export-message" class="export-message" role="status" aria-live="polite" hidden></p>
+        <section id="usage-panel" class="usage-panel" aria-label="Trial usage" hidden>
+          <div class="usage-heading">
+            <div><strong id="usage-workspace-name">Workspace</strong><span id="usage-plan-label">Free preview</span></div>
+            <span id="usage-summary" class="usage-summary"></span>
+          </div>
+          <div class="usage-meter">
+            <div class="usage-meter-label"><span>Documents</span><span id="document-usage-label"></span></div>
+            <div class="usage-track"><span id="document-usage-bar"></span></div>
+          </div>
+          <div id="member-usage" class="usage-meter">
+            <div class="usage-meter-label"><span>Workspace users</span><span id="member-usage-label"></span></div>
+            <div class="usage-track"><span id="member-usage-bar"></span></div>
+          </div>
+          <p id="usage-upgrade-message" class="usage-upgrade"></p>
+        </section>
+        <section id="admin-dashboard" class="usage-panel" aria-label="Organization administration" hidden>
+          <div class="usage-heading">
+            <div><strong>Organization activity</strong><span>Audit metadata only</span></div>
+            <button id="refresh-dashboard" class="button button-quiet button-small" type="button">Refresh</button>
+          </div>
+          <p id="dashboard-message" class="message" role="status" aria-live="polite" hidden></p>
+          <div id="dashboard-summary" class="library-tools"></div>
+          <div id="dashboard-events" class="library-list"></div>
+          <div class="workspace-lifecycle">
+            <strong>Workspace data and offboarding</strong>
+            <p>Download a JSON export of workspace metadata, indexed document text and audit events. Request deletion for platform-admin review.</p>
+            <div class="chat-actions">
+              <button id="workspace-export" class="button button-quiet button-small" type="button" hidden>Export workspace data</button>
+              <button id="workspace-offboarding-request" class="button button-quiet button-small" type="button" hidden>Request workspace deletion</button>
+            </div>
+            <p id="offboarding-message" class="message" role="status" aria-live="polite" hidden></p>
+          </div>
+        </section>
+        <form id="upload-form" class="upload-panel" hidden>
+          <div class="upload-heading">
+            <strong>Add a document</strong>
+            <span>PDF, DOCX, TXT, or Markdown · up to 20 MiB</span>
+          </div>
+          <label for="document-file">Choose a file</label>
+          <label id="file-dropzone" class="upload-dropzone" for="document-file">
+            <span class="dropzone-icon" aria-hidden="true">↑</span>
+            <span><strong>Drop a document here</strong><small>or browse files on your device</small></span>
+            <input id="document-file" name="file" type="file" accept=".pdf,.docx,.txt,.md,.markdown" required>
+          </label>
+          <div id="selected-file" class="selected-file" hidden>
+            <span class="selected-file-icon" aria-hidden="true">DOC</span>
+            <span class="selected-file-copy"><strong id="selected-file-name"></strong><small id="selected-file-size"></small></span>
+            <button id="clear-selected-file" class="button button-quiet button-small" type="button" aria-label="Remove selected file">Remove</button>
+          </div>
+          <label for="acl-groups">Who can access it?</label>
+          <input id="acl-groups" name="acl_groups" type="text" maxlength="510" list="workspace-group-options" placeholder="e.g. staff, finance" aria-describedby="acl-groups-help acl-public-warning" required>
+          <datalist id="workspace-group-options"></datalist>
+          <div id="acl-chip-list" class="acl-chip-list" aria-label="Selected document access groups"></div>
+          <small id="acl-groups-help">Enter the exact workspace group names, separated by commas. Only members of those groups can find this document.</small>
+          <div class="workspace-directory">
+            <label for="workspace-group-name">Create a workspace group</label>
+            <div class="acl-controls">
+              <input id="workspace-group-name" type="text" maxlength="100" placeholder="e.g. finance">
+              <button id="create-workspace-group" class="button button-quiet button-small" type="button">Add group</button>
+            </div>
+            <p id="workspace-group-message" class="message" role="status" aria-live="polite" hidden></p>
+            <strong>Workspace members</strong>
+            <div id="workspace-members" class="library-list"></div>
+          </div>
+          <label class="access-public-option">
+            <input id="acl-all" type="checkbox">
+            <span><strong>Everyone in this workspace</strong><small>Allow all workspace members to find this document.</small></span>
+          </label>
+          <p id="acl-public-warning" class="access-warning" role="status" hidden>This document will be available to everyone in your workspace.</p>
+          <button id="upload-submit" class="button button-primary upload-submit" type="submit">Upload and index</button>
+          <p id="upload-message" class="message" role="status" aria-live="polite" hidden></p>
+        </form>
+        <section id="document-library" class="library-panel" aria-label="Document library" hidden>
+          <div class="library-heading">
+            <div><strong>Document library</strong><span>Manage access for documents in your workspace.</span></div>
+            <button id="refresh-library" class="button button-quiet button-small" type="button">Refresh</button>
+          </div>
+          <p id="library-message" class="message" role="status" aria-live="polite" hidden></p>
+          <div class="library-tools">
+            <label class="sr-only" for="library-search">Search documents and allowed groups</label>
+            <input id="library-search" type="search" placeholder="Search documents or groups…" autocomplete="off">
+            <label class="sr-only" for="library-access-filter">Filter by document access</label>
+            <select id="library-access-filter">
+              <option value="all">All access</option>
+              <option value="restricted">Restricted</option>
+              <option value="workspace">Everyone in workspace</option>
+            </select>
+            <span id="library-count" class="library-count" aria-live="polite"></span>
+          </div>
+          <div id="library-list" class="library-list"></div>
+        </section>
+
+        <div id="conversation" class="conversation" aria-live="polite" aria-relevant="additions"></div>
+        <div id="suggestions" class="suggestions" aria-label="Suggested questions">
+          <button type="button" class="suggestion" data-question="What are the key points in the documents?">Summarize key points <span>↗</span></button>
+          <button type="button" class="suggestion" data-question="What steps or requirements should I know about?">Find steps or requirements <span>↗</span></button>
+          <button type="button" class="suggestion" data-question="What deadlines or dates are mentioned?">Look for a date <span>↗</span></button>
+        </div>
+        <form id="chat-form" class="composer">
+          <label class="sr-only" for="question">Ask your documents</label>
+          <textarea id="question" name="question" rows="1" maxlength="2000" placeholder="Ask a question about your documents…" required></textarea>
+          <button id="send-button" class="send-button" type="submit" aria-label="Send question" disabled>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 12 20 4l-4.5 16-3.1-6.1L4.5 12Z" /><path d="m12.4 13.9 4.2-4.2" /></svg>
+          </button>
+        </form>
+        <div class="composer-meta">
+          <span id="question-count" aria-live="off">0 / 2000</span>
+          <span>Enter to send · Shift+Enter for a new line</span>
+        </div>
+        <div class="composer-note"><span class="note-lock" aria-hidden="true">◆</span> Answers are generated from documents you’re allowed to access. Questions and audit metadata may be recorded for workspace administration. Always check the sources.</div>
+        <p class="provider-disclosure">Model-provider disclosure: When hosted AI is enabled, your question and authorized retrieved passages may be sent to configured providers: Groq, OpenRouter, Cerebras and NVIDIA NIM. The starting provider is chosen at random; if it fails, the remaining configured providers are tried. Check with your workspace administrator before submitting sensitive content. <a href="/privacy">Read the privacy notice</a>.</p>
+        <p id="chat-error" class="message message-error chat-error" role="alert" hidden></p>
+        <button id="retry-question" class="button button-quiet button-small retry-button" type="button" hidden>Retry last question</button>
+      </section>
+
+      <footer class="footer">
+        <span><span id="brand-attribution">DOC READER <span class="footer-separator">·</span> </span><span id="footer-brand">DOCUMENTS, CONNECTED</span></span>
+        <span id="footer-copy">Answers may be imperfect. Verify important information in the cited source.</span>
+        <a id="support-link" class="support-link" hidden>Contact support</a>
+        <nav class="legal-links" aria-label="Legal information">
+          <a href="/privacy">Privacy</a>
+          <a href="/terms">Terms</a>
+          <a href="/subprocessors">Subprocessors</a>
+        </nav>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,54 @@
+{
+  "title": "DocQA Operational Overview",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Application Ready",
+      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+      "targets": [{"expr": "docqa_app_ready"}]
+    },
+    {
+      "type": "stat",
+      "title": "Database Ready",
+      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
+      "targets": [{"expr": "docqa_database_ready"}]
+    },
+    {
+      "type": "stat",
+      "title": "Provider Ready",
+      "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
+      "targets": [{"expr": "docqa_provider_ready"}]
+    },
+    {
+      "type": "stat",
+      "title": "HTTP Errors",
+      "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0},
+      "targets": [{"expr": "docqa_http_errors_total"}]
+    },
+    {
+      "type": "timeseries",
+      "title": "HTTP Throughput",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+      "targets": [{"expr": "rate(docqa_http_requests_total[5m])"}]
+    },
+    {
+      "type": "timeseries",
+      "title": "HTTP Latency",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
+      "targets": [
+        {"expr": "docqa_http_latency_mean_ms", "legendFormat": "mean"},
+        {"expr": "docqa_http_latency_max_ms", "legendFormat": "max"}
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Database Probe Latency",
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 12},
+      "targets": [{"expr": "docqa_database_latency_ms"}]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "_comment": "A neutral starting profile for any organization or document collection.",
+  "tenant_id": "example-organization",
+  "name": "Organization Assistant",
+  "organisation": "Example Organization",
+  "domain": "the organization's policies, guides, records, and reference documents",
+  "audience": "employees and approved users",
+  "language": "English",
+  "tone": "clear, neutral, and helpful",
+  "answer_style": "standard",
+  "extra_instructions": [
+    "Use plain language and explain unfamiliar terms when the sources support an explanation."
+  ],
+  "default_acl": ["admin"],
+  "require_citation": true,
+  "check_grounding": true
+}

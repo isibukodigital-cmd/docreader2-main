@@ -1,0 +1,27 @@
+{
+  "_comment": "Example customer profile: a chartered accountancy. Matches the synthetic corpus from `docqa synth`.",
+  "tenant_id": "harbour-finch",
+  "name": "Harbour & Finch Assistant",
+  "organisation": "Harbour & Finch Chartered Accountants",
+  "domain": "client engagement letters, services agreements, invoices and firm policies",
+  "audience": "partners and staff",
+  "language": "English",
+  "tone": "professional and precise",
+  "answer_style": "concise",
+  "extra_instructions": [
+    "State amounts in rand exactly as written and say whether VAT is included or excluded.",
+    "Never summarise one client's documents when the question is about a different client."
+  ],
+  "not_found_text": "I couldn't find this in the documents you have access to.",
+  "glossary": {
+    "notice period": ["terminate", "termination", "written notice"],
+    "audit fee": ["fees", "annual audit fee"],
+    "retention": ["retained", "working papers"]
+  },
+  "k": 4,
+  "max_chars": 900,
+  "overlap": 150,
+  "default_acl": ["partners"],
+  "require_citation": true,
+  "check_grounding": true
+}

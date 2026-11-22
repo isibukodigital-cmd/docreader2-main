@@ -1,0 +1,27 @@
+{
+  "_comment": "Example customer profile: a very different customer (an HR helpdesk for a retailer) on the same code base.",
+  "tenant_id": "northwind-retail-hr",
+  "name": "Ask HR",
+  "organisation": "Northwind Retail",
+  "domain": "HR policies, leave rules, onboarding guides and the staff handbook",
+  "audience": "store and head-office employees",
+  "language": "English",
+  "tone": "friendly, clear and plain-spoken",
+  "answer_style": "standard",
+  "extra_instructions": [
+    "Use plain language and avoid legal jargon.",
+    "For anything about pay disputes, discipline or health, say the employee should also speak to their HR business partner."
+  ],
+  "not_found_text": "I couldn't find that in the HR documents you can see. Please contact your HR business partner.",
+  "glossary": {
+    "annual leave": ["vacation", "holiday", "time off"],
+    "sick leave": ["illness", "medical certificate", "absence"],
+    "payslip": ["salary statement", "pay advice"]
+  },
+  "k": 5,
+  "max_chars": 1100,
+  "overlap": 200,
+  "default_acl": ["admin"],
+  "require_citation": true,
+  "check_grounding": true
+}

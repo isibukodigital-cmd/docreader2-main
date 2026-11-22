@@ -1,0 +1,21 @@
+aws_region = "eu-north-1"
+project_name = "docreader"
+
+# Configure these together to enable DNS, ACM HTTPS, and Cognito callbacks on your domain.
+app_domain_name = ""
+route53_zone_id = ""
+
+# Each federated provider needs both values; keep actual secrets out of this file.
+google_oauth_client_id = ""
+google_oauth_client_secret = ""
+microsoft_oauth_client_id = ""
+microsoft_oauth_client_secret = ""
+
+# Separate Entra SPA application used only for Microsoft Graph authorization.
+microsoft_graph_client_id = ""
+
+# Keep at zero for the first apply. Push an ECR image before scaling up.
+app_desired_capacity = 0
+
+# These are chargeable managed services. Multi-AZ is opt-in for cost control.
+db_multi_az = false

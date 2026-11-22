@@ -1,0 +1,106 @@
+services:
+  caddy:
+    image: caddy:2.9-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    env_file:
+      - .env.caddy
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - edge
+
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env.app
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/health/ready"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    expose:
+      - "8000"
+    volumes:
+      - embedding_model_cache:/home/docqa/.cache/huggingface
+    networks:
+      - edge
+      - observability
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=30d"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ../observability/docqa-alert-rules.yml:/etc/prometheus/rules/docqa-alert-rules.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "127.0.0.1:9090:9090"
+    depends_on:
+      app:
+        condition: service_healthy
+      alertmanager:
+        condition: service_started
+    networks:
+      - observability
+
+  alertmanager:
+    image: prom/alertmanager:v0.28.1
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+      - "--config.expand-env"
+    env_file:
+      - .env.alerting
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager_data:/alertmanager
+    ports:
+      - "127.0.0.1:9093:9093"
+    networks:
+      - observability
+
+  grafana:
+    image: grafana/grafana:12.1.1
+    restart: unless-stopped
+    env_file:
+      - .env.grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ../observability/docqa-grafana-dashboard.json:/var/lib/grafana/dashboards/docqa-grafana-dashboard.json:ro
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      prometheus:
+        condition: service_started
+    networks:
+      - observability
+
+networks:
+  edge:
+  observability:
+    internal: true
+
+volumes:
+  caddy_data:
+  caddy_config:
+  prometheus_data:
+  alertmanager_data:
+  grafana_data:
+  embedding_model_cache:
