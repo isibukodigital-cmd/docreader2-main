@@ -232,15 +232,6 @@ begin
         raise exception 'organization already registered';
     end if;
 
-    insert into public.docqa_organization_requests (
-        request_id, microsoft_tenant_id, name, verified_domains,
-        requested_by, requester_email, selected_groups
-    )
-    values (
-        p_request_id, p_microsoft_tenant_id, v_name,
-        coalesce(p_verified_domains, array[]::text[]),
-        p_requested_by, v_email, p_selected_groups
-    )
     select * into v_request
     from public.docqa_organization_requests r
     where r.microsoft_tenant_id = p_microsoft_tenant_id
