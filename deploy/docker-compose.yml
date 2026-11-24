@@ -18,6 +18,7 @@ services:
       - edge
 
   app:
+    image: ${DOCQA_IMAGE:-docreader2-app:local}
     build:
       context: ..
       dockerfile: Dockerfile
@@ -91,11 +92,13 @@ services:
         condition: service_started
     networks:
       - observability
+      - grafana_access
 
 networks:
   edge:
   observability:
     internal: true
+  grafana_access: {}
 
 volumes:
   caddy_data:

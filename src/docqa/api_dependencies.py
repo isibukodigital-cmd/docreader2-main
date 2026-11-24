@@ -27,11 +27,17 @@ MICROSOFT_ORG_ADMIN_ROLE_TEMPLATE_IDS = {
 
 
 def _authenticated_identity(request: Request, token: str) -> AuthenticatedUser:
-    if request.app.state.deployment.auth_provider == "cognito":
+    if (
+        request.app.state.deployment.auth_provider == "cognito"
+        or request.app.state.deployment.document_store == "postgres"
+    ):
         identity_token = request.headers.get("x-docqa-identity-token")
-        user = request.app.state.auth_verifier.authenticate_user(
-            token, identity_token=identity_token
-        )
+        if request.app.state.deployment.auth_provider == "cognito":
+            user = request.app.state.auth_verifier.authenticate_user(
+                token, identity_token=identity_token
+            )
+        else:
+            user = request.app.state.auth_verifier.authenticate_user(token)
         request.app.state.store.ensure_identity(
             user.user_id,
             user.auth_provider,

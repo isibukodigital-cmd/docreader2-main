@@ -254,6 +254,7 @@ class FakeStore:
         self.members: dict[tuple[str, str], dict] = {}
         self.updated_metadata: dict[str, dict] = {}
         self.identity_metadata: dict[str, dict] = {}
+        self.identity_ensures: list[tuple] = []
         self.registration_error = None
         self.audit_error = None
         self.workspace_groups: dict[str, set[str]] = {}
@@ -600,6 +601,9 @@ class FakeStore:
     def ensure_identity(
         self, user_id, auth_provider, issuer, subject, email, email_verified
     ):
+        self.identity_ensures.append(
+            (user_id, auth_provider, issuer, subject, email, email_verified)
+        )
         self.identity_metadata.setdefault(user_id, {})
 
     def get_identity_app_metadata(self, user_id):
@@ -1198,6 +1202,45 @@ def test_google_personal_onboarding_creates_private_preview_workspace(api):
     )
     assert already_onboarded.status_code == 409
     assert already_onboarded.json()["detail"] == "This account already has a workspace"
+
+
+def test_supabase_auth_registers_identity_in_separate_postgres_store():
+    auth = FakeAuth()
+    store = FakeStore()
+    store.identity_metadata = auth.identity_metadata
+    app = create_app(
+        settings=Settings(
+            supabase_url="https://tenant-a.supabase.co",
+            supabase_anon_key="public-anon-key",
+            supabase_service_role_key="server-only-service-key",
+            deployment=DeploymentConfig(
+                model="local-preview",
+                document_store="postgres",
+            ),
+        ),
+        auth_verifier=auth,
+        store=store,
+        embedder=FakeEmbedder(),
+        backend=SimpleAnswer(),
+    )
+
+    with TestClient(app) as client:
+        response = client.get(
+            "/v1/onboarding/options",
+            headers={"Authorization": "Bearer new-google"},
+        )
+
+    assert response.status_code == 200
+    assert store.identity_ensures == [
+        (
+            "user-google",
+            "supabase",
+            "supabase",
+            "user-google",
+            "user@example.com",
+            False,
+        )
+    ]
 
 
 def test_microsoft_organization_onboarding_joins_verified_org_and_limits_seats(api):
